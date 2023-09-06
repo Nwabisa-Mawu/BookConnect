@@ -1,10 +1,71 @@
-// eslint-disable-next-line no-unused-vars
+/* eslint-disable react/prop-types */
 import React from "react";
+import { useState } from "react";
+import ReactDOM from "react-dom";
+import { Modal, Button, Container } from "react-bootstrap";
+import "../index.css";
 
-const Header = () => {
+const SearchModal = (props) => {
+
+  const { onHide } = props;
 
   return (
-     <header className="header">
+    <Container className="overlay">
+ <Modal
+      {...props}
+      className="overlay__content"
+      aria-labelledby="contained-modal-title-vcenter"
+    >
+      <Modal.Body>
+      <form className="overlay__form">
+          <label className="overlay__field">
+            <div className="overlay__label">Title</div>
+            <input className="overlay__input" name="title" placeholder="Any"></input>
+          </label>
+
+          <label className="overlay__field">
+            <div className="overlay__label">Genre</div>
+            <select className="overlay__input overlay__input_select" data-search-genres name="genre"></select>
+          </label>
+
+          <label className="overlay__field">
+            <div className="overlay__label">Author</div>
+            <select className="overlay__input overlay__input_select" data-search-authors name="author">
+            </select>
+          </label>
+        </form>
+      </Modal.Body>
+      <Modal.Footer>
+      <Button onClick={onHide}>Close</Button>
+      </Modal.Footer>
+    </Modal>
+    </Container>
+  );
+};
+
+const ThemeModal = (props) => {
+
+  const { onHide } = props;
+
+  return (
+    <>
+    
+    </>
+  );
+};
+
+const Header = () => {
+  //state for the search modal
+  const [searchModal, setSearchModal] = useState(false);
+
+  const handleOpenSearch = () => {
+    console.log(searchModal);
+    setSearchModal(true);
+  };
+
+  return (
+    <>
+      <header className="header">
       <div className="header__inner">
         <div className="header__logo">
           <svg
@@ -36,7 +97,8 @@ const Header = () => {
           </svg>
         </div>
         <div>
-          <button className="header__button">
+          {/* search button */}
+          <button className="header__button" onClick={handleOpenSearch}>
             <svg
               className="header__icon"
               viewBox="0 96 960 960"
@@ -48,6 +110,7 @@ const Header = () => {
             </svg>
           </button>
 
+          {/* theme toggle button */}
           <button className="header__button">
             <svg
               className="header__icon"
@@ -62,6 +125,15 @@ const Header = () => {
         </div>
       </div>
     </header>
+
+    {/* Use createPortal to render modal outside of the Header component */}
+    {ReactDOM.createPortal(
+      <SearchModal
+        show={searchModal}
+        onHide={() => setSearchModal(false)}
+        />, document.body
+    )}
+    </>
   )
 };
 
